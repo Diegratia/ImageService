@@ -12,7 +12,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const fileType = await handlePostUpload(req.file);
 
     const folder = path.basename(path.dirname(req.file.path));
-    const fileUrl = `${env.BASE_URL}/uploads/${folder}/${req.file.filename}`;
+    const fileUrl = `http://${env.BASE_URL}/uploads/${folder}/${req.file.filename}`;
 
     return res.status(200).json({
       success: true,
