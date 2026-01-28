@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const { PORT, BASE_URL } = require("./config/env");
+const env = require("./config/env");
 const { upload, handlePostUpload } = require("./services/uploadService");
 
 const app = express();
@@ -11,9 +11,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const fileType = await handlePostUpload(req.file);
 
-    const fileUrl = `${BASE_URL}/uploads/${path.basename(
-      path.dirname(req.file.path),
-    )}/${req.file.filename}`;
+    const folder = path.basename(path.dirname(req.file.path));
+    const fileUrl = `${env.BASE_URL}/uploads/${folder}/${req.file.filename}`;
 
     return res.status(200).json({
       success: true,
@@ -28,8 +27,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       },
       code: 200,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({
       success: false,
       msg: "Upload failed",
@@ -39,6 +38,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Upload service running on port ${PORT}`);
+app.listen(env.PORT, () => {
+  console.log(`🚀 Upload service running on ${env.BASE_URL}`);
 });

@@ -1,6 +1,10 @@
 require("dotenv").config();
 
 module.exports = {
-  PORT: process.env.PORT || 3000,
-  BASE_URL: process.env.BASE_URL || "http://localhost:3000",
+  PORT: process.env.PORT,
+  APP_HOST: process.env.APP_HOST,
+
+  get BASE_URL() {
+    return `${this.APP_HOST}${this.PORT ? `:${this.PORT}` : ""}`;
+  },
 };
