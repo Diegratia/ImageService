@@ -1,0 +1,13 @@
+
+services:
+  upload-service:
+    container_name: upload-service
+    build: .
+    ports:
+      - "5099:5099"
+    environment:
+      - PORT=5099
+      - BASE_URL=http://localhost:5099
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
