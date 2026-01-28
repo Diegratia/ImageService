@@ -1,11 +1,13 @@
 const express = require("express");
 const path = require("path");
 const env = require("./config/env");
+const uploadRoute = require("./routes/upload");
 const { upload, handlePostUpload } = require("./services/uploadService");
 
 const app = express();
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api", uploadRoute);
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
