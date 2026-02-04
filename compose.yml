@@ -1,6 +1,6 @@
 services:
   upload-service:
-    container_name: upload-service
+    container_name: people-tracking-cdn
     build: .
     ports:
       - "${PORT}:${PORT}"

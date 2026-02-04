@@ -1,11 +1,17 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
-
 const uploadLocal = require("./routes/uploadLocal");
 const uploadSupabase = require("./routes/uploadSupabase");
-
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api", uploadLocal);
