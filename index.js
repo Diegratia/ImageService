@@ -15,6 +15,10 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+  res.send("🚀 Image Service is running!");
+});
+
 const uploadsPath = process.pkg
   ? path.join(path.dirname(process.execPath), "uploads")
   : path.join(__dirname, "uploads");
