@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 echo [1/4] Installing dependencies...
 call npm install
 
