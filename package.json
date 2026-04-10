@@ -2,8 +2,10 @@
   "name": "imageservice",
   "version": "1.0.0",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg ."
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +21,25 @@
     "fs": "^0.0.1-security",
     "multer": "^2.0.2",
     "path": "^0.12.7",
-    "sharp": "^0.34.5"
+    "sharp": "^0.32.6"
+  },
+  "pkg": {
+    "scripts": [
+      "routes/**/*.js",
+      "services/**/*.js",
+      "config/**/*.js"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "assets": [
+      ".env",
+      "node_modules/sharp/**/*",
+      "node_modules/ffmpeg-static/**/*"
+    ],
+    "outputPath": "dist"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
   }
 }
