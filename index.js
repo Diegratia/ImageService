@@ -9,7 +9,7 @@ require("dotenv").config({ path: dotEnvPath });
 const express = require("express");
 const cors = require("cors");
 const uploadLocal = require("./routes/uploadLocal");
-const uploadSupabase = require("./routes/uploadSupabase");
+const uploadSupabase = require("./routes/uploadSupabase.bak");
 const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());

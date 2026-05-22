@@ -79,7 +79,7 @@ const compressImageFile = async (filePath, mimetype) => {
     sharpInstance = sharpInstance.png({
       quality: 80,
       compressionLevel: 9,
-      palette: true
+      palette: true,
     });
   } else if (mimetype === "image/webp") {
     // Compress as WebP
@@ -134,7 +134,6 @@ const handleLocalPostUpload = async (file) => {
   if (IMAGE_TYPES.includes(file.mimetype)) {
     const result = await compressImageFile(file.path, file.mimetype);
     if (result.changed) {
-      // Dynamic update of Express/Multer file metadata so the API returns the correct .jpg path
       file.path = result.newFilePath;
       file.filename = path.basename(result.newFilePath);
     }
@@ -145,66 +144,7 @@ const handleLocalPostUpload = async (file) => {
   return resolveFileType(file.mimetype);
 };
 
-/* ---------- SUPABASE ---------- */
-// const compressImageBuffer = async (buffer) =>
-//   sharp(buffer).jpeg({ quality: 70 }).toBuffer();
-
-// const compressVideoBuffer = async (buffer) => {
-//   // const inFile = `/tmp/${crypto.randomUUID()}.mp4`;
-//   // const outFile = inFile.replace(".mp4", "_c.mp4");
-
-//   fs.writeFileSync(inFile, buffer);
-
-//   await new Promise((resolve, reject) => {
-//     ffmpeg(inFile)
-//       .videoCodec("libx264")
-//       .size("?x720")
-//       .outputOptions("-crf 28")
-//       .save(outFile)
-//       .on("end", resolve)
-//       .on("error", reject);
-//   });
-
-//   const out = fs.readFileSync(outFile);
-//   fs.unlinkSync(inFile);
-//   fs.unlinkSync(outFile);
-//   return out;
-// };
-
-// async function uploadToSupabase(file) {
-//   let buffer = file.buffer;
-
-//   if (IMAGE_TYPES.includes(file.mimetype)) {
-//     buffer = await compressImageBuffer(buffer);
-//   }
-//   if (VIDEO_TYPES.includes(file.mimetype)) {
-//     buffer = await compressVideoBuffer(buffer);
-//   }
-
-//   const filename = crypto.randomUUID() + path.extname(file.originalname);
-//   const folder = resolveFolder(file.mimetype);
-//   const objectPath = `${folder}/${filename}`;
-
-//   const { error } = await supabase.storage
-//     .from("attachments")
-//     .upload(objectPath, buffer, {
-//       contentType: file.mimetype,
-//     });
-
-//   if (error) throw error;
-
-//   const { data } = supabase.storage
-//     .from("attachments")
-//     .getPublicUrl(objectPath);
-
-//   return {
-//     fileUrl: data.publicUrl.replace(/^https?:\/\//, ""),
-//     fileType: resolveFileType(file.mimetype),
-//   };
-// }
-
 module.exports = {
   uploadLocal,
   handleLocalPostUpload,
-  // uploadToSupabase,
 };
