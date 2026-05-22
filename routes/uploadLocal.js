@@ -17,7 +17,7 @@ router.post("/upload-local", uploadLocal.single("file"), async (req, res) => {
     collection: {
       data: [
         {
-          fileUrl: `uploads/${folder}/${req.file.filename}`,
+          fileUrl: `${process.env.CDN_URL}/uploads/${folder}/${req.file.filename}`,
           fileType,
         },
       ],
