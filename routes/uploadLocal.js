@@ -1,5 +1,9 @@
 const express = require("express");
 const path = require("path");
+const dotEnvPath = process.pkg
+  ? path.join(path.dirname(process.execPath), ".env")
+  : path.join(__dirname, ".env");
+require("dotenv").config({ path: dotEnvPath });
 const {
   uploadLocal,
   handleLocalPostUpload,
