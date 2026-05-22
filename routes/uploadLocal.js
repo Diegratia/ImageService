@@ -12,22 +12,38 @@ const {
 const router = express.Router();
 
 router.post("/upload-local", uploadLocal.single("file"), async (req, res) => {
-  const fileType = await handleLocalPostUpload(req.file);
-  const folder = path.basename(path.dirname(req.file.path));
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        msg: "File is required",
+        code: 400,
+      });
+    }
 
-  res.json({
-    success: true,
-    msg: "Uploaded to local CDN",
-    collection: {
-      data: [
-        {
-          fileUrl: `${process.env.CDN_URL}/uploads/${folder}/${req.file.filename}`,
-          fileType,
-        },
-      ],
-    },
-    code: 200,
-  });
+    const fileType = await handleLocalPostUpload(req.file);
+    const folder = path.basename(path.dirname(req.file.path));
+
+    res.json({
+      success: true,
+      msg: "Uploaded to local CDN",
+      collection: {
+        data: [
+          {
+            fileUrl: `${process.env.CDN_URL}/uploads/${folder}/${req.file.filename}`,
+            fileType,
+          },
+        ],
+      },
+      code: 200,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Upload failed",
+      code: 500,
+    });
+  }
 });
 
 module.exports = router;

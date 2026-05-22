@@ -88,7 +88,10 @@ const compressVideoFile = (filePath) =>
         fs.renameSync(out, filePath);
         resolve();
       })
-      .on("error", reject);
+      .on("error", (err) => {
+        if (fs.existsSync(out)) fs.unlinkSync(out);
+        reject(err);
+      });
   });
 
 const handleLocalPostUpload = async (file) => {
