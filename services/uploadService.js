@@ -69,10 +69,22 @@ const uploadLocal = multer({
 });
 
 /* ---------- COMPRESS ---------- */
-const compressImageFile = async (filePath) => {
-  await sharp(filePath)
-    .jpeg({ quality: 70 })
-    .toFile(filePath + ".tmp");
+const compressImageFile = async (filePath, mimetype) => {
+  if (mimetype === "image/png") {
+    // Optimize PNG: retain transparency, sharp lines/text, and compress file size efficiently
+    await sharp(filePath)
+      .png({
+        quality: 80,
+        compressionLevel: 9,
+        palette: true
+      })
+      .toFile(filePath + ".tmp");
+  } else {
+    // Standard JPEG compression
+    await sharp(filePath)
+      .jpeg({ quality: 70 })
+      .toFile(filePath + ".tmp");
+  }
   fs.renameSync(filePath + ".tmp", filePath);
 };
 
@@ -95,7 +107,7 @@ const compressVideoFile = (filePath) =>
   });
 
 const handleLocalPostUpload = async (file) => {
-  if (IMAGE_TYPES.includes(file.mimetype)) await compressImageFile(file.path);
+  if (IMAGE_TYPES.includes(file.mimetype)) await compressImageFile(file.path, file.mimetype);
   if (VIDEO_TYPES.includes(file.mimetype)) await compressVideoFile(file.path);
   return resolveFileType(file.mimetype);
 };

@@ -38,6 +38,17 @@ router.post("/upload-local", uploadLocal.single("file"), async (req, res) => {
       code: 200,
     });
   } catch (err) {
+    // Delete the file from the filesystem if processing/compression fails to avoid orphaned junk files
+    if (req.file && req.file.path) {
+      try {
+        const fs = require("fs");
+        if (fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+      } catch (cleanupErr) {
+        console.error("Failed to delete temp file upon upload failure:", cleanupErr);
+      }
+    }
     res.status(500).json({
       success: false,
       msg: err.message || "Upload failed",
